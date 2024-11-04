@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { getCurrentUser, signUp, signIn, confirmSignUp, resendSignUpCode } from 'aws-amplify/auth';
-import { Card, CardHeader, CardContent } from '../ui/card';
-import { Loader2 } from 'lucide-react';
+import { Card } from '../../components/ui/card';
+import { Loader2, Mail, Lock, ArrowRight, ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { useAuthStore } from '../../store/auth';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const AuthComponent = () => {
   const [loading, setLoading] = useState(true);
@@ -15,6 +16,7 @@ const AuthComponent = () => {
   });
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const setAuth = useAuthStore((state) => state.setAuth);
 
   useEffect(() => {
@@ -36,13 +38,13 @@ const AuthComponent = () => {
     e.preventDefault();
     setError('');
     setMessage('');
+    setIsSubmitting(true);
     
     try {
       switch (formState) {
         case 'signUp':
           if (formData.password !== formData.confirmPassword) {
-            setError('Las contraseñas no coinciden');
-            return;
+            throw new Error('Las contraseñas no coinciden');
           }
           await signUp({
             username: formData.email,
@@ -54,7 +56,7 @@ const AuthComponent = () => {
             }
           });
           
-          setMessage('Se ha enviado un código de verificación a tu correo');
+          setMessage('¡Registro exitoso! Te hemos enviado un código de verificación');
           setFormState('confirmSignUp');
           break;
 
@@ -64,9 +66,8 @@ const AuthComponent = () => {
             confirmationCode: formData.verificationCode
           });
           
-          setMessage('Cuenta verificada correctamente. Por favor, inicia sesión.');
-          setFormState('signIn');
-          setFormData(prev => ({ ...prev, verificationCode: '' }));
+          setMessage('¡Cuenta verificada! Ya puedes iniciar sesión');
+          setTimeout(() => setFormState('signIn'), 1500);
           break;
 
         case 'signIn':
@@ -83,153 +84,184 @@ const AuthComponent = () => {
       }
     } catch (err) {
       handleAuthError(err);
-    }
-  };
-
-  const handleAuthError = (err) => {
-    switch (err.name) {
-      case 'UserNotConfirmedException':
-        setError('Por favor, verifica tu cuenta primero');
-        setFormState('confirmSignUp');
-        break;
-      case 'UsernameExistsException':
-        setError('Este correo electrónico ya está registrado');
-        break;
-      case 'CodeMismatchException':
-        setError('Código de verificación incorrecto');
-        break;
-      case 'NotAuthorizedException':
-        setError('Credenciales incorrectas');
-        break;
-      default:
-        setError(err.message || 'Error en la autenticación');
-    }
-  };
-
-  const handleResendCode = async () => {
-    try {
-      await resendSignUpCode({
-        username: formData.email,
-      });
-      setMessage('Se ha enviado un nuevo código de verificación');
-      setError('');
-    } catch (err) {
-      setError('Error al reenviar el código. Por favor, intenta de nuevo.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-50 py-12 px-4 sm:px-6 lg:px-8">
-      <Card className="max-w-md w-full space-y-8 bg-white p-8 shadow-xl">
-        <CardHeader className="text-center">
-          <img src="/whatsapp-logo.png" alt="WhatsApp CRM" className="mx-auto h-12 w-12 mb-4" />
-          <h2 className="text-3xl font-bold text-gray-900">
-            WhatsApp CRM
-          </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            {formState === 'signIn' && 'Inicia sesión en tu cuenta'}
-            {formState === 'signUp' && 'Crea una nueva cuenta'}
-            {formState === 'confirmSignUp' && 'Verifica tu cuenta'}
-          </p>
-        </CardHeader>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-green-50 py-12 px-4 sm:px-6 lg:px-8">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-md w-full"
+      >
+        <Card className="p-8 shadow-xl bg-white/80 backdrop-blur-sm">
+          <div className="text-center mb-8">
+            <div className="w-20 h-20 mx-auto bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center mb-4">
+              <img 
+                src="/whatsapp-logo.png" 
+                alt="WhatsApp CRM" 
+                className="h-12 w-12 object-contain"
+              />
+            </div>
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
+              WhatsApp CRM
+            </h2>
+            <p className="mt-2 text-sm text-gray-600">
+              {formState === 'signIn' && 'Accede a tu cuenta para gestionar tus leads'}
+              {formState === 'signUp' && 'Crea una cuenta para empezar'}
+              {formState === 'confirmSignUp' && 'Verifica tu cuenta para continuar'}
+            </p>
+          </div>
 
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-4">
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                  Correo electrónico
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  required
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  value={formData.email}
-                  onChange={(e) => setFormData({...formData, email: e.target.value})}
-                />
+          <AnimatePresence mode="wait">
+            <motion.form
+              key={formState}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              onSubmit={handleSubmit}
+              className="space-y-6"
+            >
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-red-50 text-red-600 p-3 rounded-lg text-sm flex items-center gap-2"
+                >
+                  {error}
+                </motion.div>
+              )}
+
+              {message && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-green-50 text-green-600 p-3 rounded-lg text-sm flex items-center gap-2"
+                >
+                  <CheckCircle2 className="h-4 w-4" />
+                  {message}
+                </motion.div>
+              )}
+
+              <div className="space-y-4">
+                {formState !== 'confirmSignUp' && (
+                  <>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                      <input
+                        type="email"
+                        required
+                        placeholder="Correo electrónico"
+                        className="pl-10 w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                        value={formData.email}
+                        onChange={(e) => setFormData({...formData, email: e.target.value})}
+                      />
+                    </div>
+
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                      <input
+                        type="password"
+                        required
+                        placeholder="Contraseña"
+                        className="pl-10 w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                        value={formData.password}
+                        onChange={(e) => setFormData({...formData, password: e.target.value})}
+                      />
+                    </div>
+
+                    {formState === 'signUp' && (
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                        <input
+                          type="password"
+                          required
+                          placeholder="Confirmar contraseña"
+                          className="pl-10 w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                          value={formData.confirmPassword}
+                          onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
+                        />
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {formState === 'confirmSignUp' && (
+                  <div className="space-y-4">
+                    <div className="relative">
+                      <input
+                        type="text"
+                        required
+                        placeholder="Código de verificación"
+                        className="w-full p-3 text-center text-2xl tracking-widest border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                        value={formData.verificationCode}
+                        onChange={(e) => setFormData({...formData, verificationCode: e.target.value})}
+                        maxLength={6}
+                      />
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={handleResendCode}
+                      className="w-full p-3 text-gray-600 hover:text-gray-900 text-sm transition-colors"
+                    >
+                      ¿No recibiste el código? Reenviar
+                    </button>
+                  </div>
+                )}
               </div>
 
-              {formState !== 'confirmSignUp' && (
-                <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                    Contraseña
-                  </label>
-                  <input
-                    id="password"
-                    type="password"
-                    required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    value={formData.password}
-                    onChange={(e) => setFormData({...formData, password: e.target.value})}
-                  />
-                </div>
-              )}
-
-              {formState === 'signUp' && (
-                <div>
-                  <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-                    Confirmar contraseña
-                  </label>
-                  <input
-                    id="confirmPassword"
-                    type="password"
-                    required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    value={formData.confirmPassword}
-                    onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
-                  />
-                </div>
-              )}
-
-              {formState === 'confirmSignUp' && (
-                <div>
-                  <label htmlFor="verificationCode" className="block text-sm font-medium text-gray-700">
-                    Código de verificación
-                  </label>
-                  <input
-                    id="verificationCode"
-                    type="text"
-                    required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    value={formData.verificationCode}
-                    onChange={(e) => setFormData({...formData, verificationCode: e.target.value})}
-                  />
-                </div>
-              )}
-            </div>
-
-            <div>
               <button
                 type="submit"
-                className="w-full flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                disabled={isSubmitting}
+                className="w-full bg-gradient-to-r from-blue-600 to-green-600 text-white p-3 rounded-lg font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-50"
               >
-                {formState === 'signIn' && 'Iniciar sesión'}
-                {formState === 'signUp' && 'Registrar'}
-                {formState === 'confirmSignUp' && 'Confirmar'}
+                {isSubmitting ? (
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                ) : (
+                  <>
+                    {formState === 'signIn' && 'Iniciar sesión'}
+                    {formState === 'signUp' && 'Crear cuenta'}
+                    {formState === 'confirmSignUp' && 'Verificar cuenta'}
+                    <ArrowRight className="h-5 w-5" />
+                  </>
+                )}
               </button>
-            </div>
-          </form>
 
-          {formState === 'confirmSignUp' && (
-            <button
-              type="button"
-              onClick={handleResendCode}
-              className="w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-500 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
-              Reenviar código de verificación
-            </button>
-          )}
-        </CardContent>
-      </Card>
+              <div className="mt-4 text-center">
+                {formState === 'signIn' ? (
+                  <button
+                    type="button"
+                    onClick={() => setFormState('signUp')}
+                    className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                  >
+                    ¿No tienes cuenta? Regístrate
+                  </button>
+                ) : formState === 'signUp' ? (
+                  <button
+                    type="button"
+                    onClick={() => setFormState('signIn')}
+                    className="text-sm text-gray-600 hover:text-gray-900 transition-colors flex items-center justify-center gap-1"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    Volver al inicio de sesión
+                  </button>
+                ) : null}
+              </div>
+            </motion.form>
+          </AnimatePresence>
+        </Card>
+      </motion.div>
     </div>
   );
 };
