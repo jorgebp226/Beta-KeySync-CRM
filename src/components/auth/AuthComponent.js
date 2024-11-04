@@ -34,6 +34,46 @@ const AuthComponent = () => {
     }
   };
 
+  const handleAuthError = (err) => {
+    console.error('Auth error:', err);
+    switch (err.name) {
+      case 'UserNotConfirmedException':
+        setError('Por favor, verifica tu cuenta primero');
+        setFormState('confirmSignUp');
+        break;
+      case 'UsernameExistsException':
+        setError('Este correo electrónico ya está registrado');
+        break;
+      case 'CodeMismatchException':
+        setError('Código de verificación incorrecto');
+        break;
+      case 'NotAuthorizedException':
+        setError('Credenciales incorrectas');
+        break;
+      case 'UserNotFoundException':
+        setError('No existe una cuenta con este correo electrónico');
+        break;
+      default:
+        setError(err.message || 'Error en la autenticación');
+    }
+  };
+
+  const handleResendCode = async () => {
+    try {
+      setIsSubmitting(true);
+      await resendSignUpCode({
+        username: formData.email,
+      });
+      setMessage('Se ha enviado un nuevo código de verificación');
+      setError('');
+    } catch (err) {
+      setError('Error al reenviar el código. Por favor, intenta de nuevo.');
+      console.error('Resend code error:', err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -80,6 +120,9 @@ const AuthComponent = () => {
             const user = await getCurrentUser();
             setAuth(true, user);
           }
+          break;
+
+        default:
           break;
       }
     } catch (err) {
@@ -213,7 +256,8 @@ const AuthComponent = () => {
                     <button
                       type="button"
                       onClick={handleResendCode}
-                      className="w-full p-3 text-gray-600 hover:text-gray-900 text-sm transition-colors"
+                      disabled={isSubmitting}
+                      className="w-full p-3 text-gray-600 hover:text-gray-900 text-sm transition-colors disabled:opacity-50"
                     >
                       ¿No recibiste el código? Reenviar
                     </button>
