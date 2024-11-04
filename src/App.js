@@ -16,10 +16,7 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-gray-900">WhatsApp CRM</h1>
           {user && (
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-500">
-                {user.attributes.email}
-              </span>
+            <div className="flex items-center">
               <button
                 onClick={() => useAuthStore.getState().setAuth(false, null)}
                 className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
