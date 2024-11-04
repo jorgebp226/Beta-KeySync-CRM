@@ -10,6 +10,7 @@ api.interceptors.request.use(async (config) => {
     const token = session.tokens?.accessToken.toString();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      config.headers['Content-Type'] = 'application/json'; // Agrega el Content-Type a cada solicitud
     }
     return config;
   } catch (error) {
@@ -30,7 +31,12 @@ export const getUserLeads = async (sub) => {
 
 // Inicializar WhatsApp y obtener QR
 export const initializeWhatsApp = async (sub) => {
-  return api.post(`http://13.36.209.139:3000/start/${sub}`);
+  const data = {
+    maxChats: 10,
+    maxMessagesPerChat: 1000,
+  };
+
+  return api.post(`http://13.36.209.139:3000/start/${sub}`, data);
 };
 
 // Obtener código QR
