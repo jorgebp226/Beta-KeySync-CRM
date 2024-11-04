@@ -15,7 +15,7 @@ export const getUserLeads = async (sub) => {
 
 // Inicializar WhatsApp y obtener QR
 export const initializeWhatsApp = async (sub) => {
-  return api.post(`https://wa9rhtsgbf.execute-api.eu-west-3.amazonaws.com/keysync/start${sub}`);
+  return api.post(`https://wa9rhtsgbf.execute-api.eu-west-3.amazonaws.com/keysync/start/${sub}`);
 };
 
 // Obtener código QR
