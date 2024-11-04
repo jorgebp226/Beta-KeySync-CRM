@@ -20,5 +20,5 @@ export const initializeWhatsApp = async (sub) => {
 
 // Obtener código QR
 export const getQRCode = async (sub) => {
-  return api.get(`https://wa9rhtsgbf.execute-api.eu-west-3.amazonaws.com/keysync/qr-code?sub=${sub}`);
+  return api.post(`https://wa9rhtsgbf.execute-api.eu-west-3.amazonaws.com/keysync/qr-code?sub=${sub}`);
 };
