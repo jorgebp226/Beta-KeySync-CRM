@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardHeader, CardContent } from '../../components/ui/card';
+import { Card, CardHeader, CardContent } from '../ui/card';
 import { Loader2 } from 'lucide-react';
 import LeadCard from './LeadCard';
 import QRScanner from '../qr/QRScanner';

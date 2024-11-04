@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { initializeWhatsApp, getQRCode } from '../../services/api';
-import { Card, CardHeader, CardContent } from '@/components/ui/card';
+import { Card, CardHeader, CardContent } from '../ui/card';
 import { Loader2 } from 'lucide-react';
 
 const QRScanner = ({ sub }) => {

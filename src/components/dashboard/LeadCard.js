@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card } from '@/components/ui/card';
+import { Card } from '../ui/card';
 import LeadScore from './LeadScore';
 
 const LeadCard = ({ lead }) => {
