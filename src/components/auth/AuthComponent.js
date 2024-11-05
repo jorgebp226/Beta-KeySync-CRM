@@ -110,8 +110,12 @@ const AuthComponent = () => {
           if (!formData.email) {
             throw new Error('El correo electrónico es requerido.');
           }
-          const user = await signIn(formData.email, formData.password);
-          if (user?.signInUserSession) {
+          const { username, signInUserSession } = await signIn({
+            username: formData.email,
+            password: formData.password
+          });
+          if (signInUserSession) {
+            const user = await getCurrentUser();
             setAuth(true, user);
           }
           break;
@@ -125,7 +129,6 @@ const AuthComponent = () => {
       setIsSubmitting(false);
     }
   };
-
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
