@@ -38,9 +38,9 @@ const LeadCard = ({ lead }) => {
           
           {lead.viviendasEnviadas?.length > 0 && (
             <>
-              <h4 className="font-medium mt-4 mb-2">Propiedades mostradas</h4>
+              <h4 className="font-medium mt-4 mb-2">Ofertas mostradas</h4>
               <ul className="text-sm text-gray-600">
-                {lead.viviendasEnviadas.map((url, index) => (
+                {lead.productosenviados.map((url, index) => (
                   <li key={index} className="mb-1">
                     <a 
                       href={url} 

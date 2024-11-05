@@ -107,6 +107,9 @@ const AuthComponent = () => {
           break;
 
         case 'signIn':
+          if (!formData.email) {
+            throw new Error('El correo electrónico es requerido.');
+          }
           const user = await signIn(formData.email, formData.password);
           if (user?.signInUserSession) {
             setAuth(true, user);
