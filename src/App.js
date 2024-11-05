@@ -21,12 +21,12 @@ const PrivateRoute = ({ children }) => {
 
 const PublicRoute = ({ children }) => {
   const { isAuthenticated } = useAuthStore();
-  return !isAuthenticated ? children : <Navigate to="/auth" replace />;
+  return !isAuthenticated ? children : <Navigate to="/dashboard" replace />;
 };
 
-// Nueva ruta para verificar si el usuario necesita completar el survey
+// Nueva ruta para redirigir solo a usuarios recién registrados al survey
 const SurveyCheck = ({ children }) => {
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated } = useAuthStore();
   const hasCompletedSurvey = localStorage.getItem('surveyCompleted') === 'true';
 
   if (!isAuthenticated) {
@@ -59,7 +59,7 @@ function App() {
         <Route
           path="/"
           element={
-            <Navigate to={isAuthenticated ? "/dashboard" : "/auth"} replace />
+            isAuthenticated ? <Navigate to="/dashboard" replace /> : <Navigate to="/auth" replace />
           }
         />
         
@@ -72,7 +72,7 @@ function App() {
           }
         />
 
-        {/* Rutas del Survey */}
+        {/* Rutas del Survey solo para nuevos usuarios */}
         <Route
           path="/survey/step1"
           element={
@@ -106,6 +106,7 @@ function App() {
           }
         />
 
+        {/* Dashboard accesible solo si el usuario completó el survey */}
         <Route
           path="/dashboard/*"
           element={

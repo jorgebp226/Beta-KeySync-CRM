@@ -36,13 +36,16 @@ const LoadingPage = () => {
           throw new Error('Error en la respuesta de la API');
         }
 
-        // Marcar el survey como completado
+        // Marcar el survey como completado en localStorage
         localStorage.setItem('surveyCompleted', 'true');
         
-        // Limpiar los datos del survey
+        // Limpiar los datos del survey de localStorage
         localStorage.removeItem('surveyStep1');
         localStorage.removeItem('surveyStep2');
         localStorage.removeItem('surveyStep3');
+
+        // Redirigir al Dashboard
+        navigate('/dashboard');
 
       } catch (error) {
         console.error('Error al enviar los datos:', error);
@@ -52,6 +55,7 @@ const LoadingPage = () => {
 
     sendSurveyData();
 
+    // Simulación de progreso
     const timer = setInterval(() => {
       setProgress((prevProgress) => {
         if (prevProgress < 3) {
@@ -62,13 +66,8 @@ const LoadingPage = () => {
       });
     }, 10000);
 
-    const redirectTimer = setTimeout(() => {
-      navigate('/dashboard');
-    }, 45000);
-
     return () => {
       clearInterval(timer);
-      clearTimeout(redirectTimer);
     };
   }, [navigate]);
 
