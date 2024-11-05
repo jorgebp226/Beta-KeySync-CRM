@@ -47,6 +47,7 @@
     display: block;
     margin-bottom: 5px;
     font-weight: 500;
+    font-family: 'Roboto', sans-serif;
   }
   
   .form-group input,
@@ -55,6 +56,8 @@
     padding: 10px;
     border: 1px solid #000000;
     border-radius: 4px;
+    margin-top: 5px;
+    font-family: 'Roboto', sans-serif;
   }
   
   .input-recommendation {
@@ -63,7 +66,7 @@
     float: right;
   }
   
-  button1 {
+  .button1 {
     background-color: #008489;
     color: white;
     padding: 12px 35px;
@@ -71,7 +74,14 @@
     border-radius: 24px;
     cursor: pointer;
     font-size: 13px;
-    font-weight: regular;
+    font-weight: 400;
+    margin-top: 20px;
+    width: 100%;
+    transition: background-color 0.3s ease;
+  }
+  
+  .button1:hover {
+    background-color: #006d71;
   }
   
   .survey1-image {
@@ -94,7 +104,7 @@
     position: absolute;
     bottom: 20px;
     left: 40px;
-    width: calc(60% - 0px);
+    width: calc(60% - 80px);
     height: 4px;
     background-color: #e0e0e0;
   }
@@ -102,7 +112,7 @@
   .progress {
     height: 100%;
     background-color: #008489;
-    width: 0%;
+    width: 25%;
     transition: width 0.3s ease;
   }
   
@@ -128,6 +138,6 @@
     border: none;
     font-size: 16px;
     padding: 0;
-    color: #ccc; /* Light gray color */
-    pointer-events: none; /* Disable the button */
+    color: #ccc;
+    pointer-events: none;
   }
