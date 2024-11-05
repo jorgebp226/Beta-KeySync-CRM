@@ -2,6 +2,7 @@
 
 export const checkSurveyStatus = async (userId) => {
     try {
+      console.log('userId:', userId);
       const response = await fetch('https://wa9rhtsgbf.execute-api.eu-west-3.amazonaws.com/keysync/survey-completed', {
         method: 'POST',
         headers: {
