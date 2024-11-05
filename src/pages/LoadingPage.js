@@ -40,7 +40,9 @@ const LoadingPage = () => {
         }
 
         // Guardar en localStorage y limpiar datos
-        localStorage.setItem('surveyCompleted', 'true');
+        if (surveyStep1 && surveyStep2 && surveyStep3) {
+          localStorage.setItem('surveyCompleted', 'true');
+        }
         localStorage.removeItem('surveyStep1');
         localStorage.removeItem('surveyStep2');
         localStorage.removeItem('surveyStep3');
