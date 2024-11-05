@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Building2, Pool, Car, Laptop, Shield, GraduationCap, 
+import { Building2, Car, Laptop, Shield, GraduationCap, 
          Wallet, Heart, Cloud, Sun, Shirt, Apple, Plane, 
          Factory, Target, Sofa, Phone, Scale, Truck, Smile } from 'lucide-react';
 import './SurveyStep2.css';
@@ -11,7 +11,7 @@ const SurveyStep2 = () => {
 
   const sectors = [
     { id: 'Inmobiliaria', label: 'Inmobiliaria', icon: Building2 },
-    { id: 'Construcción de Piscinas', label: 'Construcción de Piscinas', icon: Pool },
+    { id: 'Construcción de Piscinas', label: 'Construcción de Piscinas', icon: 'swimming-pool' }, // Ruta personalizada
     { id: 'Automóviles', label: 'Automóviles', icon: Car },
     { id: 'Tecnología', label: 'Tecnología', icon: Laptop },
     { id: 'Seguros', label: 'Seguros', icon: Shield },
@@ -30,8 +30,7 @@ const SurveyStep2 = () => {
     { id: 'Servicios Legales', label: 'Servicios Legales', icon: Scale },
     { id: 'Transporte y Logística', label: 'Transporte y Logística', icon: Truck },
     { id: 'Productos de Belleza', label: 'Productos de Belleza', icon: Smile }
-];
-
+  ];
 
   const handleSectorSelect = (sectorId) => {
     setSelectedSector(sectorId);
@@ -55,19 +54,24 @@ const SurveyStep2 = () => {
           <p>Selecciona el sector que mejor describa tu actividad principal.</p>
           
           <div className="sectors-grid">
-            {sectors.map(sector => {
-              const IconComponent = sector.icon;
-              return (
-                <div
-                  key={sector.id}
-                  className={`sector-card ${selectedSector === sector.id ? 'selected' : ''}`}
-                  onClick={() => handleSectorSelect(sector.id)}
-                >
-                  <IconComponent size={24} />
-                  <span>{sector.label}</span>
-                </div>
-              );
-            })}
+            {sectors.map(sector => (
+              <div
+                key={sector.id}
+                className={`sector-card ${selectedSector === sector.id ? 'selected' : ''}`}
+                onClick={() => handleSectorSelect(sector.id)}
+              >
+                {sector.icon === 'swimming-pool' ? (
+                  <img 
+                    src={`${process.env.PUBLIC_URL}/swimming-pool.png`} // Carga de PNG desde public
+                    alt="Custom Pool Icon" 
+                    style={{ width: 24, height: 24 }} 
+                  />
+                ) : (
+                  <sector.icon size={24} />
+                )}
+                <span>{sector.label}</span>
+              </div>
+            ))}
           </div>
 
           <button 
