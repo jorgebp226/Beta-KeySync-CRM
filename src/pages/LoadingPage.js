@@ -31,7 +31,7 @@ const LoadingPage = () => {
             ...surveyStep1,
             sector: surveyStep2,
             whatsappContacts: surveyStep3,
-            surveyCompleted: true // Marcar como completado
+            surveyCompleted: true
           }),
         });
 
@@ -39,10 +39,7 @@ const LoadingPage = () => {
           throw new Error('Error en la respuesta de la API');
         }
 
-        // Guardar en localStorage y limpiar datos
-        if (surveyStep1 && surveyStep2 && surveyStep3) {
-          localStorage.setItem('surveyCompleted', 'true');
-        }
+        // Limpiar localStorage
         localStorage.removeItem('surveyStep1');
         localStorage.removeItem('surveyStep2');
         localStorage.removeItem('surveyStep3');
@@ -103,7 +100,6 @@ const LoadingPage = () => {
               </li>
             </ul>
           )}
-          <p>Si no se te redirige automáticamente, haz clic <a href="/dashboard">aquí</a>.</p>
         </div>
       </div>
       <div className="loading-image">

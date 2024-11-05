@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { Building2, Car, Laptop, Shield, GraduationCap, 
          Wallet, Heart, Cloud, Sun, Shirt, Apple, Plane, 
          Factory, Target, Sofa, Phone, Scale, Truck, Smile } from 'lucide-react';
-import './SurveyStep2.css';
 
 const SurveyStep2 = () => {
   const navigate = useNavigate();
@@ -54,24 +53,19 @@ const SurveyStep2 = () => {
           <p>Selecciona el sector que mejor describa tu actividad principal.</p>
           
           <div className="sectors-grid">
-            {sectors.map(sector => (
-              <div
-                key={sector.id}
-                className={`sector-card ${selectedSector === sector.id ? 'selected' : ''}`}
-                onClick={() => handleSectorSelect(sector.id)}
-              >
-                {sector.icon === 'swimming-pool' ? (
-                  <img 
-                    src={`${process.env.PUBLIC_URL}/swimming-pool.png`} // Carga de PNG desde public
-                    alt="Custom Pool Icon" 
-                    style={{ width: 24, height: 24 }} 
-                  />
-                ) : (
-                  <sector.icon size={24} />
-                )}
-                <span>{sector.label}</span>
-              </div>
-            ))}
+            {sectors.map(sector => {
+              const IconComponent = sector.icon;
+              return (
+                <div
+                  key={sector.id}
+                  className={`sector-card ${selectedSector === sector.id ? 'selected' : ''}`}
+                  onClick={() => handleSectorSelect(sector.id)}
+                >
+                  <IconComponent size={24} />
+                  <span>{sector.label}</span>
+                </div>
+              );
+            })}
           </div>
 
           <button 
