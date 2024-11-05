@@ -164,7 +164,7 @@ const AuthComponent = () => {
       >
         <Card className="p-8 shadow-xl bg-white rounded-lg">
           <CardHeader className="text-center mb-6">
-            <h2 className="text-3xl font-bold text-gray-900">WhatsApp CRM</h2>
+            <h2 className="text-3xl font-bold text-gray-900">KeySync CRM</h2>
             <p className="mt-2 text-sm text-gray-600">
               {formState === 'signIn' && 'Accede a tu cuenta para gestionar tus leads'}
               {formState === 'signUp' && 'Crea una cuenta para empezar'}
