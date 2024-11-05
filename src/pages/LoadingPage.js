@@ -47,6 +47,9 @@ const LoadingPage = () => {
         localStorage.removeItem('surveyStep2');
         localStorage.removeItem('surveyStep3');
 
+        // Esperar 30 segundos antes de redirigir
+        await new Promise(resolve => setTimeout(resolve, 30000));
+
         // Redirigir al Dashboard
         navigate('/dashboard');
 

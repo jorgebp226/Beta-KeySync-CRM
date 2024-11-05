@@ -11,7 +11,7 @@ const SurveyStep2 = () => {
 
   const sectors = [
     { id: 'Inmobiliaria', label: 'Inmobiliaria', icon: Building2 },
-    { id: 'Construcción de Piscinas', label: 'Construcción de Piscinas', icon: 'swimming-pool' }, // Ruta personalizada
+    { id: 'Construcción de Piscinas', label: 'Construcción de Piscinas', icon: Building2 },
     { id: 'Automóviles', label: 'Automóviles', icon: Car },
     { id: 'Tecnología', label: 'Tecnología', icon: Laptop },
     { id: 'Seguros', label: 'Seguros', icon: Shield },
