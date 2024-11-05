@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Building2, Car, Laptop, Shield, GraduationCap, 
          Wallet, Heart, Cloud, Sun, Shirt, Apple, Plane, 
-         Factory, Target, Sofa, Phone, Scale, Truck, Smile } from 'lucide-react';
+         Factory, Target, Sofa, Phone, Scale, Truck, Smile, Pool } from 'lucide-react';
 import './SurveyStep2.css';
+
 const SurveyStep2 = () => {
   const navigate = useNavigate();
   const [selectedSector, setSelectedSector] = useState('');
@@ -42,6 +43,11 @@ const SurveyStep2 = () => {
     }
   };
 
+  const renderIcon = (IconComponent) => {
+    if (!IconComponent) return null;
+    return <IconComponent size={24} color="#008489" />;
+  };
+
   return (
     <div className="survey2-container">
       <div className="survey2-header">
@@ -53,19 +59,16 @@ const SurveyStep2 = () => {
           <p>Selecciona el sector que mejor describa tu actividad principal.</p>
           
           <div className="sectors-grid">
-            {sectors.map(sector => {
-              const IconComponent = sector.icon;
-              return (
-                <div
-                  key={sector.id}
-                  className={`sector-card ${selectedSector === sector.id ? 'selected' : ''}`}
-                  onClick={() => handleSectorSelect(sector.id)}
-                >
-                  <IconComponent size={24} />
-                  <span>{sector.label}</span>
-                </div>
-              );
-            })}
+            {sectors.map((sector, index) => (
+              <div
+                key={`${sector.id}-${index}`}
+                className={`sector-card ${selectedSector === sector.id ? 'selected' : ''}`}
+                onClick={() => handleSectorSelect(sector.id)}
+              >
+                {renderIcon(sector.icon)}
+                <span>{sector.label}</span>
+              </div>
+            ))}
           </div>
 
           <button 

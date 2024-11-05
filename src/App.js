@@ -25,16 +25,24 @@ const PublicRoute = ({ children }) => {
   return !isAuthenticated ? children : <Navigate to="/dashboard" replace />;
 };
 
-// Nueva ruta para redirigir solo a usuarios que no han completado el survey
+// Componente de verificación del survey modificado
 const SurveyCheck = ({ children }) => {
   const { isAuthenticated, user } = useAuthStore();
-  const [hasCompletedSurvey, setHasCompletedSurvey] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [hasCompletedSurvey, setHasCompletedSurvey] = useState(true); // Default a true
 
   useEffect(() => {
     const fetchSurveyStatus = async () => {
       if (isAuthenticated && user) {
-        const surveyStatus = await checkSurveyStatus(user.userId);
-        setHasCompletedSurvey(surveyStatus);
+        try {
+          const surveyStatus = await checkSurveyStatus(user.userId);
+          setHasCompletedSurvey(surveyStatus);
+        } catch (error) {
+          console.error('Error checking survey status:', error);
+          setHasCompletedSurvey(true); // En caso de error, permitimos el acceso
+        } finally {
+          setLoading(false);
+        }
       }
     };
 
@@ -45,9 +53,14 @@ const SurveyCheck = ({ children }) => {
     return <Navigate to="/auth" replace />;
   }
 
-  // Redirigir al inicio del survey si el estado es nulo
-  if (hasCompletedSurvey === null) {
-    return <Navigate to="/survey/step1" replace />;
+  if (loading) {
+    return null; // o un componente de loading si lo prefieres
+  }
+
+  // Siempre permitimos el acceso al dashboard después del loading page
+  const isFromLoadingPage = window.location.pathname === '/loading';
+  if (isFromLoadingPage) {
+    return children;
   }
 
   if (!hasCompletedSurvey) {
@@ -88,7 +101,7 @@ function App() {
           }
         />
 
-        {/* Rutas del Survey solo para nuevos usuarios */}
+        {/* Rutas del Survey */}
         <Route
           path="/survey/step1"
           element={
@@ -122,7 +135,7 @@ function App() {
           }
         />
 
-        {/* Dashboard accesible solo si el usuario completó el survey */}
+        {/* Dashboard */}
         <Route
           path="/dashboard/*"
           element={

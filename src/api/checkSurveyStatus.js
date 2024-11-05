@@ -6,19 +6,20 @@ export const checkSurveyStatus = async (userId) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
-        body: JSON.stringify({ sub: userId }),
+        body: JSON.stringify({ sub: userId })
       });
   
       if (!response.ok) {
-        throw new Error('Error en la respuesta de la API');
+        console.error('Error response:', response.status);
+        return true; // En caso de error, permitimos el acceso al dashboard
       }
   
       const data = await response.json();
-      return data.surveyCompleted;
+      return data.surveyCompleted ?? true; // Si no hay respuesta clara, permitimos el acceso
     } catch (error) {
       console.error('Error al verificar el estado del survey:', error);
-      return false; // En caso de error, devolvemos false para redirigir al survey
+      return true; // En caso de error, permitimos el acceso al dashboard
     }
-  };
-  
+};
