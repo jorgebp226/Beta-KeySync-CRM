@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   getCurrentUser,
   signUp,
   signIn,
   confirmSignUp,
-  resendSignUpCode
+  resendSignUpCode,
+  fetchUserAttributes
 } from 'aws-amplify/auth';
 import { useAuthStore } from '../../store/auth';
 import { Loader2, Mail, Lock, ArrowRight, ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { Card, CardHeader, CardContent } from '../../components/ui/card';
 import { Alert, AlertDescription } from '../../components/ui/alert';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
 
 const AuthComponent = () => {
   const navigate = useNavigate();
@@ -26,23 +27,31 @@ const AuthComponent = () => {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const setAuth = useAuthStore((state) => state.setAuth);
+  const { setAuth, isAuthenticated } = useAuthStore();
 
   useEffect(() => {
-    checkAuthStatus();
+    const initAuth = async () => {
+      try {
+        const user = await getCurrentUser();
+        const attributes = await fetchUserAttributes();
+        setAuth(true, { ...user, attributes });
+        navigate('/dashboard', { replace: true });
+      } catch (error) {
+        console.log('No authenticated user');
+        setAuth(false, null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initAuth();
   }, []);
 
-  const checkAuthStatus = async () => {
-    try {
-      const user = await getCurrentUser();
-      setAuth(true, user);
-      navigate('/dashboard');
-    } catch {
-      setAuth(false, null);
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard', { replace: true });
     }
-  };
+  }, [isAuthenticated, navigate]);
 
   const handleAuthError = (err) => {
     console.error('Auth error:', err);
@@ -71,7 +80,7 @@ const AuthComponent = () => {
   const handleResendCode = async () => {
     try {
       setIsSubmitting(true);
-      await resendSignUpCode(formData.email);
+      await resendSignUpCode({ username: formData.email });
       setMessage('Se ha enviado un nuevo código de verificación.');
       setError('');
     } catch (err) {
@@ -104,7 +113,10 @@ const AuthComponent = () => {
           break;
 
         case 'confirmSignUp':
-          await confirmSignUp(formData.email, formData.verificationCode);
+          await confirmSignUp({
+            username: formData.email,
+            confirmationCode: formData.verificationCode
+          });
           setMessage('¡Cuenta verificada! Ya puedes iniciar sesión.');
           setTimeout(() => setFormState('signIn'), 1500);
           break;
@@ -113,14 +125,15 @@ const AuthComponent = () => {
           if (!formData.email) {
             throw new Error('El correo electrónico es requerido.');
           }
-          const { username, signInUserSession } = await signIn({
+          const signInResponse = await signIn({
             username: formData.email,
             password: formData.password
           });
-          if (signInUserSession) {
+          
+          if (signInResponse.isSignedIn) {
             const user = await getCurrentUser();
-            setAuth(true, user);
-            navigate('/dashboard');
+            const attributes = await fetchUserAttributes();
+            setAuth(true, { ...user, attributes });
           }
           break;
 
@@ -133,6 +146,7 @@ const AuthComponent = () => {
       setIsSubmitting(false);
     }
   };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
