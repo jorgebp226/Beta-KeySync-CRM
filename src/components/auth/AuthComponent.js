@@ -11,10 +11,12 @@ import { Loader2, Mail, Lock, ArrowRight, ArrowLeft, CheckCircle2 } from 'lucide
 import { Card, CardHeader, CardContent } from '../../components/ui/card';
 import { Alert, AlertDescription } from '../../components/ui/alert';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 const AuthComponent = () => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [formState, setFormState] = useState('signIn'); // 'signIn', 'signUp', 'confirmSignUp'
+  const [formState, setFormState] = useState('signIn');
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -34,6 +36,7 @@ const AuthComponent = () => {
     try {
       const user = await getCurrentUser();
       setAuth(true, user);
+      navigate('/dashboard');
     } catch {
       setAuth(false, null);
     } finally {
@@ -117,6 +120,7 @@ const AuthComponent = () => {
           if (signInUserSession) {
             const user = await getCurrentUser();
             setAuth(true, user);
+            navigate('/dashboard');
           }
           break;
 
