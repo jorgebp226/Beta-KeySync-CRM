@@ -11,14 +11,16 @@ const LoadingPage = () => {
   useEffect(() => {
     const sendSurveyData = async () => {
       try {
-        // Obtener el usuario actual con Amplify v6
+        // Obtener el usuario actual con Amplify
         const user = await getCurrentUser();
         const userId = user.userId;
 
+        // Obtener datos del survey de localStorage
         const surveyStep1 = JSON.parse(localStorage.getItem('surveyStep1')) || {};
         const surveyStep2 = JSON.parse(localStorage.getItem('surveyStep2')) || '';
         const surveyStep3 = JSON.parse(localStorage.getItem('surveyStep3')) || '';
 
+        // Enviar datos a la API
         const response = await fetch('https://wa9rhtsgbf.execute-api.eu-west-3.amazonaws.com/keysync/survey', {
           method: 'POST',
           headers: {
@@ -28,7 +30,8 @@ const LoadingPage = () => {
             sub: userId,
             ...surveyStep1,
             sector: surveyStep2,
-            whatsappContacts: surveyStep3
+            whatsappContacts: surveyStep3,
+            surveyCompleted: true // Marcar como completado
           }),
         });
 
@@ -36,10 +39,8 @@ const LoadingPage = () => {
           throw new Error('Error en la respuesta de la API');
         }
 
-        // Marcar el survey como completado en localStorage
+        // Guardar en localStorage y limpiar datos
         localStorage.setItem('surveyCompleted', 'true');
-        
-        // Limpiar los datos del survey de localStorage
         localStorage.removeItem('surveyStep1');
         localStorage.removeItem('surveyStep2');
         localStorage.removeItem('surveyStep3');

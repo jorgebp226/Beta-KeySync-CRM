@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Amplify } from 'aws-amplify';
 import { signOut } from 'aws-amplify/auth';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import awsconfig from './aws-exports';
 import { useAuthStore } from './store/auth';
+import { checkSurveyStatus } from './api/checkSurveyStatus';
 import AuthComponent from './components/auth/AuthComponent';
 import Dashboard from './components/dashboard/Dashboard';
 import Layout from './components/layout/Layout';
@@ -24,13 +25,33 @@ const PublicRoute = ({ children }) => {
   return !isAuthenticated ? children : <Navigate to="/dashboard" replace />;
 };
 
-// Nueva ruta para redirigir solo a usuarios recién registrados al survey
+// Nueva ruta para redirigir solo a usuarios que no han completado el survey
 const SurveyCheck = ({ children }) => {
-  const { isAuthenticated } = useAuthStore();
-  const hasCompletedSurvey = localStorage.getItem('surveyCompleted') === 'true';
+  const { isAuthenticated, user } = useAuthStore();
+  const [hasCompletedSurvey, setHasCompletedSurvey] = useState(null);
+
+  useEffect(() => {
+    const fetchSurveyStatus = async () => {
+      if (isAuthenticated && user) {
+        const surveyStatus = await checkSurveyStatus(user.userId);
+        setHasCompletedSurvey(surveyStatus);
+        // Guardar el estado en localStorage si se completó el survey
+        if (surveyStatus) {
+          localStorage.setItem('surveyCompleted', 'true');
+        }
+      }
+    };
+
+    fetchSurveyStatus();
+  }, [isAuthenticated, user]);
 
   if (!isAuthenticated) {
     return <Navigate to="/auth" replace />;
+  }
+
+  if (hasCompletedSurvey === null) {
+    // Mostrar loading mientras esperamos la respuesta de la API
+    return <LoadingPage />;
   }
 
   if (!hasCompletedSurvey) {
