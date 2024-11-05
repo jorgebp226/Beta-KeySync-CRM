@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Building2, Car, Laptop, Shield, GraduationCap, 
          Wallet, Heart, Cloud, Sun, Shirt, Apple, Plane, 
          Factory, Target, Sofa, Phone, Scale, Truck, Smile } from 'lucide-react';
-
+import './SurveyStep2.css';
 const SurveyStep2 = () => {
   const navigate = useNavigate();
   const [selectedSector, setSelectedSector] = useState('');
