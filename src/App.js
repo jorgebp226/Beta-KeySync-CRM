@@ -35,10 +35,6 @@ const SurveyCheck = ({ children }) => {
       if (isAuthenticated && user) {
         const surveyStatus = await checkSurveyStatus(user.userId);
         setHasCompletedSurvey(surveyStatus);
-        // Guardar el estado en localStorage si se completó el survey
-        if (surveyStatus) {
-          localStorage.setItem('surveyCompleted', 'true');
-        }
       }
     };
 
@@ -67,7 +63,6 @@ function App() {
   const handleLogout = async () => {
     try {
       await signOut();
-      localStorage.removeItem('surveyCompleted');
       setAuth(false, null);
     } catch (error) {
       console.error('Error during sign out:', error);
