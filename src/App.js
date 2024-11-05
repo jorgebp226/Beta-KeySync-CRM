@@ -8,7 +8,11 @@ import Dashboard from './components/dashboard/Dashboard';
 Amplify.configure(awsconfig);
 
 function App() {
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated, user, setAuth } = useAuthStore();
+
+  const handleLogout = () => {
+    setAuth(false, null);
+  };
 
   return isAuthenticated ? (
     <div className="min-h-screen w-full bg-gray-50 flex flex-col">
@@ -18,7 +22,7 @@ function App() {
           {user && (
             <div className="flex items-center">
               <button
-                onClick={() => useAuthStore.getState().setAuth(false, null)}
+                onClick={handleLogout}
                 className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
               >
                 Cerrar Sesión
