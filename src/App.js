@@ -45,9 +45,9 @@ const SurveyCheck = ({ children }) => {
     return <Navigate to="/auth" replace />;
   }
 
+  // Redirigir al inicio del survey si el estado es nulo
   if (hasCompletedSurvey === null) {
-    // Mostrar loading mientras esperamos la respuesta de la API
-    return <LoadingPage />;
+    return <Navigate to="/survey/step1" replace />;
   }
 
   if (!hasCompletedSurvey) {
