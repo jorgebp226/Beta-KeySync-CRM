@@ -1,8 +1,7 @@
-// ChatContainer.js
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import ChatComponent from './ChatComponent';
-import { getConversation, sendMessage } from '../../services/chatApi';
+import { getConversation, sendMessage, generateAIMessage } from '../../services/chatApi';
 import { Loader2 } from 'lucide-react';
 
 const ChatContainer = ({ user }) => {
@@ -29,11 +28,20 @@ const ChatContainer = ({ user }) => {
   const handleSendMessage = async (recipient, message) => {
     try {
       await sendMessage(user.userId, recipient, message);
-      // Optionally refresh the conversation after sending
       await fetchConversation();
       return true;
     } catch (error) {
       console.error('Error sending message:', error);
+      throw error;
+    }
+  };
+
+  const handleGenerateAIMessage = async () => {
+    try {
+      const aiMessage = await generateAIMessage(user.userId, chatId);
+      return aiMessage;
+    } catch (error) {
+      console.error('Error generating AI message:', error);
       throw error;
     }
   };
@@ -50,6 +58,7 @@ const ChatContainer = ({ user }) => {
     <ChatComponent 
       lead={lead} 
       onSendMessage={handleSendMessage}
+      onGenerateAIMessage={handleGenerateAIMessage}
     />
   );
 };

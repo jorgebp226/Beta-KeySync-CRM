@@ -15,3 +15,11 @@ export const sendMessage = async (sub, recipient, message) => {
   });
   return response.data;
 };
+
+export const generateAIMessage = async (sub, chatId) => {
+  const response = await axios.post(`${BASE_URL}/generate-message`, {
+    sub,
+    chatId
+  });
+  return response.data.message;
+};
