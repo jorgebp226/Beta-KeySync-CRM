@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import ChatComponent from './ChatComponent';
-import { getConversation, sendMessage } from '../services/chatApi';
+import { getConversation, sendMessage } from '../../services/chatApi';
 import { Loader2 } from 'lucide-react';
 
 const ChatContainer = ({ user }) => {
