@@ -1,9 +1,15 @@
+// LeadCard.js
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card } from '../ui/card';
+import { MessageCircle } from 'lucide-react';
 import LeadScore from './LeadScore';
+import { Button } from '../ui/button';
 
 const LeadCard = ({ lead }) => {
+  console.log('Lead data:', lead);
   const [isExpanded, setIsExpanded] = useState(false);
+  const navigate = useNavigate();
 
   const getStatusColor = (estado) => {
     const colors = {
@@ -15,14 +21,36 @@ const LeadCard = ({ lead }) => {
     return colors[estado] || 'bg-gray-100 text-gray-800';
   };
 
+  const handleCardClick = (e) => {
+    // Evitar que el click del botón de chat expanda la tarjeta
+    if (!e.target.closest('.chat-button')) {
+      setIsExpanded(!isExpanded);
+    }
+  };
+
+  const handleChatClick = (e) => {
+    e.stopPropagation();
+    navigate(`/chat/${lead.chatId}`);
+  };
+
   return (
     <Card 
       className="p-4 cursor-pointer hover:shadow-lg transition-shadow" 
-      onClick={() => setIsExpanded(!isExpanded)}
+      onClick={handleCardClick}
     >
       <div className="flex justify-between items-start">
-        <div>
-          <h3 className="font-semibold text-lg">{lead.nombreContacto}</h3>
+        <div className="flex-1">
+          <div className="flex justify-between items-center">
+            <h3 className="font-semibold text-lg">{lead.nombreContacto}</h3>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="chat-button"
+              onClick={handleChatClick}
+            >
+              <MessageCircle className="h-5 w-5" />
+            </Button>
+          </div>
           <p className="text-sm text-gray-500">{lead.telefono}</p>
           <span className={`inline-block px-3 py-1 mt-2 text-sm rounded-full ${getStatusColor(lead.estadoLead)}`}>
             {lead.estadoLead}
@@ -36,7 +64,7 @@ const LeadCard = ({ lead }) => {
           <h4 className="font-medium mb-2">Resumen de la conversación</h4>
           <p className="text-sm text-gray-600">{lead.resumenConversacion}</p>
           
-          {lead.viviendasEnviadas?.length > 0 && (
+          {lead.productosenviados?.length > 0 && (
             <>
               <h4 className="font-medium mt-4 mb-2">Ofertas mostradas</h4>
               <ul className="text-sm text-gray-600">

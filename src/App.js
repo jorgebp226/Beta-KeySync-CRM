@@ -12,6 +12,7 @@ import SurveyStep1 from './components/survey/SurveyStep1';
 import SurveyStep2 from './components/survey/SurveyStep2';
 import SurveyStep3 from './components/survey/SurveyStep3';
 import LoadingPage from './pages/LoadingPage';
+import ChatContainer from './components/chat/ChatContainer';
 
 Amplify.configure(awsconfig);
 
@@ -25,11 +26,11 @@ const PublicRoute = ({ children }) => {
   return !isAuthenticated ? children : <Navigate to="/dashboard" replace />;
 };
 
-// Componente de verificación del survey modificado
+// Componente de verificación del survey
 const SurveyCheck = ({ children }) => {
   const { isAuthenticated, user } = useAuthStore();
   const [loading, setLoading] = useState(true);
-  const [hasCompletedSurvey, setHasCompletedSurvey] = useState(true); // Default a true
+  const [hasCompletedSurvey, setHasCompletedSurvey] = useState(true);
 
   useEffect(() => {
     const fetchSurveyStatus = async () => {
@@ -39,7 +40,7 @@ const SurveyCheck = ({ children }) => {
           setHasCompletedSurvey(surveyStatus);
         } catch (error) {
           console.error('Error checking survey status:', error);
-          setHasCompletedSurvey(true); // En caso de error, permitimos el acceso
+          setHasCompletedSurvey(true);
         } finally {
           setLoading(false);
         }
@@ -54,10 +55,9 @@ const SurveyCheck = ({ children }) => {
   }
 
   if (loading) {
-    return null; // o un componente de loading si lo prefieres
+    return null;
   }
 
-  // Siempre permitimos el acceso al dashboard después del loading page
   const isFromLoadingPage = window.location.pathname === '/loading';
   if (isFromLoadingPage) {
     return children;
@@ -135,13 +135,25 @@ function App() {
           }
         />
 
-        {/* Dashboard */}
+        {/* Dashboard y Chat */}
         <Route
-          path="/dashboard/*"
+          path="/dashboard"
           element={
             <SurveyCheck>
               <Layout user={user} onLogout={handleLogout}>
                 <Dashboard user={user} onLogout={handleLogout} />
+              </Layout>
+            </SurveyCheck>
+          }
+        />
+
+        {/* Nueva ruta para el chat */}
+        <Route
+          path="/chat/:chatId"
+          element={
+            <SurveyCheck>
+              <Layout user={user} onLogout={handleLogout}>
+                <ChatContainer user={user} />
               </Layout>
             </SurveyCheck>
           }
