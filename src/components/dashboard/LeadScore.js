@@ -1,6 +1,17 @@
 import React from 'react';
 
-const LeadScore = ({ score, grade = 'A' }) => {
+const LeadScore = ({ score }) => {
+  // Función para determinar la calificación basada en el puntaje
+  const getGrade = (score) => {
+    if (score >= 90) return 'A';
+    if (score >= 80) return 'B';
+    if (score >= 70) return 'C';
+    if (score >= 60) return 'D';
+    return 'F';
+  };
+
+  const grade = getGrade(score); // Obtener la calificación basada en el puntaje
+
   // Calcula el porcentaje para el relleno del círculo
   const strokeDasharray = 2 * Math.PI * 45; // 45 es el radio del círculo
   const progress = (score / 100) * strokeDasharray;
@@ -34,7 +45,7 @@ const LeadScore = ({ score, grade = 'A' }) => {
       {/* Texto central */}
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className="text-3xl font-bold">{score}</span>
-        <span className="text-sm text-gray-500">Grade {grade}</span>
+        <span className="text-sm text-gray-500">Grade {grade}</span> {/* Mostrar la calificación */}
       </div>
     </div>
   );

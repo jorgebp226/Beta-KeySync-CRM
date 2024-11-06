@@ -13,7 +13,7 @@
   }
   
   .loading-logo {
-    height: 70px;
+    height: 150px;
   }
   
   .loading-content {
@@ -32,7 +32,7 @@
   }
   
   .loading-text h1 {
-    font-family: 'Roboto Serif', serif;
+    font-family: 'Inter', sans-serif;
     font-weight: 700;
     font-size: 35px;
     margin-bottom: 40px;
@@ -67,12 +67,12 @@
   }
   
   .loading-text li.completed {
-    color: #008489;
+    color: #243ce6;
   }
   
   .loading-text li.completed:before {
-    border-color: #008489;
-    background-color: #008489;
+    border-color: #243ce6;
+    background-color: #243ce6;
   }
   
   .loading-text li span {
@@ -95,7 +95,7 @@
   }
   
   .loading-text a {
-    color: #008489;
+    color: #243ce6;
     text-decoration: none;
   }
   

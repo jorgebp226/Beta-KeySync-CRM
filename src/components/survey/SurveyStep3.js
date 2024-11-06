@@ -61,7 +61,7 @@ const SurveyStep3 = () => {
         </div>
       </div>
       <div className="survey3-image">
-        <img src={`${process.env.PUBLIC_URL}/survey3.png`} alt="Survey Step 3" />
+        <img src={`${process.env.PUBLIC_URL}/survey12.png`} alt="Survey Step 3" />
       </div>
       <div className="progress-bar">
         <div className="progress" style={{ width: "75%" }}></div>

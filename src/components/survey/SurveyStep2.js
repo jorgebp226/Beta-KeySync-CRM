@@ -13,13 +13,13 @@ const SurveyStep2 = () => {
     { id: 'Inmobiliaria', label: 'Inmobiliaria', icon: Building2 },
     { id: 'Construcción de Piscinas', label: 'Construcción de Piscinas', icon: Building2 },
     { id: 'Automóviles', label: 'Automóviles', icon: Car },
-    { id: 'Construcción de Piscinas', label: 'Construcción de Piscinas', icon: Building2 },
+    { id: 'Tecnología', label: 'Tecnología', icon: Laptop  },
     { id: 'Seguros', label: 'Seguros', icon: Shield },
     { id: 'Educación', label: 'Educación', icon: GraduationCap },
     { id: 'Servicios Financieros', label: 'Servicios Financieros', icon: Wallet },
     { id: 'Salud y Bienestar', label: 'Salud y Bienestar', icon: Heart },
     { id: 'Software como Servicio (SaaS)', label: 'Software como Servicio (SaaS)', icon: Cloud },
-    { id: 'Inmobiliaria', label: 'Inmobiliaria', icon: Building2 },
+    { id: 'Energías Renovables', label: 'Energías Renovables', icon: Sun },
     { id: 'Moda y Textiles', label: 'Moda y Textiles', icon: Shirt },
     { id: 'Alimentación y Bebidas', label: 'Alimentación y Bebidas', icon: Apple },
     { id: 'Viajes y Turismo', label: 'Viajes y Turismo', icon: Plane },
@@ -45,7 +45,7 @@ const SurveyStep2 = () => {
 
   const renderIcon = (IconComponent) => {
     if (!IconComponent) return null;
-    return <IconComponent size={24} color="#008489" />;
+    return <IconComponent size={24} color="#243ce6" />;
   };
 
   return (
@@ -81,7 +81,7 @@ const SurveyStep2 = () => {
         </div>
       </div>
       <div className="survey2-image">
-        <img src={`${process.env.PUBLIC_URL}/survey2.png`} alt="Survey Step 2" />
+        <img src={`${process.env.PUBLIC_URL}/survey6.png`} alt="Survey Step 2" />
       </div>
       <div className="progress-bar">
         <div className="progress" style={{ width: "50%" }}></div>

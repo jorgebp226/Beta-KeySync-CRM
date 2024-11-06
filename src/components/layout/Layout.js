@@ -5,7 +5,7 @@ const Layout = ({ children, user, onLogout }) => {
     <div className="min-h-screen w-full bg-gray-50 flex flex-col">
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-900">WhatsApp CRM</h1>
+          <h1 className="text-2xl font-bold text-gray-900">KeySync CRM</h1>
           {user && (
             <div className="flex items-center gap-4">
               <span className="text-sm text-gray-600">

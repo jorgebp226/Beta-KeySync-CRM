@@ -13,7 +13,7 @@
   }
   
   .survey3-logo {
-    height: 70px;
+    height: 150px;
   }
   
   .survey3-content {
@@ -28,15 +28,16 @@
   .survey3-question {
     width: 100%;
     max-width: 600px;
-    margin: 0 auto;
+    margin: 20px auto;
     padding: 20px;
   }
   
   .survey3-question h2 {
-    font-family: 'Roboto Serif', serif;
+    font-family: 'Inter', sans-serif;
     font-weight: 700;
     font-size: 30px;
     margin-bottom: 15px;
+    margin-top: 0px;
   }
   
   .survey3-question p {
@@ -71,14 +72,14 @@
   }
   
   .range-card.selected {
-    border-color: #008489;
+    border-color: #243ce6;
     background-color: #f0ffff;
     box-shadow: 0 4px 6px rgba(0, 132, 137, 0.2);
   }
   
   .range-card svg {
     margin-bottom: 12px;
-    color: #008489;
+    color: #243ce6;
   }
   
   .range-card span {
@@ -105,7 +106,7 @@
   }
   
   .submit-button {
-    background-color: #008489;
+    background-color: #243ce6;
     color: white;
     padding: 12px 35px;
     border: none;
@@ -120,7 +121,7 @@
   }
   
   .submit-button:hover {
-    background-color: #006c70;
+    background-color: #243ce6;
   }
   
   .submit-button.disabled {
@@ -139,6 +140,6 @@
   
   .progress {
     height: 100%;
-    background-color: #008489;
+    background-color: #243ce6;
     transition: width 0.3s ease;
   }
